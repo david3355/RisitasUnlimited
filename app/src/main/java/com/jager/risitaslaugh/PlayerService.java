@@ -38,7 +38,6 @@ public class PlayerService extends Service implements MediaStoppedHandler
               @Override
               public void onReceive(Context context, Intent intent)
               {
-                     Toast.makeText(PlayerService.this, "STOP ALL", Toast.LENGTH_SHORT).show();
                      stopAllMedia();
                      stopSelf();
               }
@@ -96,13 +95,11 @@ public class PlayerService extends Service implements MediaStoppedHandler
 
        private void operate(Intent intent)
        {
-//              Toast.makeText(this, "operate begins", Toast.LENGTH_SHORT).show();
               if (intent == null) return;
 
               int widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0);
               Bundle bundle = intent.getExtras();
               String[] laughIds = bundle.getStringArray(RisitasLaughWidget.LAUGH_IDS);
-//              Toast.makeText(this, "widget id: " + widgetId, Toast.LENGTH_SHORT).show();
               WidgetInstance widget = getWidgetByID(widgetId);
               if (widget == null)
               {
@@ -111,14 +108,12 @@ public class PlayerService extends Service implements MediaStoppedHandler
               }
               if (!widget.isPlaying())
               {
-//                     Toast.makeText(this, "playing", Toast.LENGTH_SHORT).show();
                      widget.playMedia();
               } else widget.stopMedia();
        }
 
        private WidgetInstance getWidgetByID(int widgetID)
        {
-//              Toast.makeText(this, "getWIdgetInstance begins", Toast.LENGTH_SHORT).show();
               for (WidgetInstance winstance : widgetInstances)
               {
                      if (winstance.getWidgetID() == widgetID) return winstance;

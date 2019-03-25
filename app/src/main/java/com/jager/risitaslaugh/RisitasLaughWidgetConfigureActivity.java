@@ -36,7 +36,8 @@ public class RisitasLaughWidgetConfigureActivity extends Activity implements Com
               public void onClick(View v)
               {
                      final Context context = RisitasLaughWidgetConfigureActivity.this;
-
+                     stopMediaPlayer();
+                     releaseMediaPlayer();
                      // When the button is clicked, store the string locally
                      List<String> laughIndexes = getChosenSoundIndexes();
                      saveSelectedIndexPrefs(context, mAppWidgetId, laughIndexes);
@@ -72,9 +73,25 @@ public class RisitasLaughWidgetConfigureActivity extends Activity implements Com
               return indexes;
        }
 
+       private void stopMediaPlayer()
+       {
+              if (player != null && player.isPlaying())
+              {
+                     player.stop();
+              }
+       }
+
+       private void releaseMediaPlayer()
+       {
+              if (player != null)
+              {
+                     player.release();
+              }
+       }
+
        private void playExampleLaugh(int soundID)
        {
-              if (player != null && player.isPlaying()) player.stop();
+              stopMediaPlayer();
               player = player.create(this, soundID);
               player.start();
        }
@@ -169,7 +186,12 @@ public class RisitasLaughWidgetConfigureActivity extends Activity implements Com
                      for (int i = 0; i < panelLaughs.getChildCount(); i++)
                      {
                             CheckBox checkBox = (CheckBox) panelLaughs.getChildAt(i);
-                            if (checkBox.getId() != buttonView.getId()) checkBox.setChecked(isChecked);
+                            if (checkBox.getId() != buttonView.getId())
+                            {
+                                   checkBox.setOnCheckedChangeListener(null);
+                                   checkBox.setChecked(isChecked);
+                                   checkBox.setOnCheckedChangeListener(this);
+                            }
                      }
               }
               else
@@ -179,6 +201,7 @@ public class RisitasLaughWidgetConfigureActivity extends Activity implements Com
                             checkAllLaughs.setOnCheckedChangeListener(null);
                             checkAllLaughs.setChecked(false);
                             checkAllLaughs.setOnCheckedChangeListener(this);
+                            stopMediaPlayer();
                      }
                      else
                      {

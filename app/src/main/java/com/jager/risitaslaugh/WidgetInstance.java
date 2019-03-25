@@ -56,13 +56,11 @@ public class WidgetInstance implements MediaPlayer.OnCompletionListener
 
        private void updateWidget(Intent intent, int imageID)
        {
-//              Toast.makeText(context, "updateWidget with id: " + widgetID, Toast.LENGTH_SHORT).show();
               int widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0);
               AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
               RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.risitas_laugh_widget);
               remoteViews.setImageViewResource(R.id.risitas_img, imageID);
               appWidgetManager.updateAppWidget(widgetId, remoteViews);
-//              Toast.makeText(context, "updateWidget widget updated with id: " + widgetID, Toast.LENGTH_SHORT).show();
        }
 
        private void mediaStopped()
