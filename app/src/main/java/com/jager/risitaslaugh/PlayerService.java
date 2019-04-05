@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -35,6 +36,7 @@ public class PlayerService extends Service implements MediaStoppedHandler
               {
                      stopAllMedia();
                      stopSelf();
+                     updateAllWidgets(PlayerService.this);
               }
        };
 
@@ -85,6 +87,17 @@ public class PlayerService extends Service implements MediaStoppedHandler
               Notification notif = notifBuilder.build();
               notif.flags |= Notification.FLAG_AUTO_CANCEL;
               return notif;
+       }
+
+       public static int[] updateAllWidgets(Context context)
+       {
+              AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+              int[] ids = appWidgetManager.getAppWidgetIds(new ComponentName(context, RisitasLaughWidget.class));
+              for (int widgetId : ids)
+              {
+                     RisitasLaughWidget.updateAppWidget(context, appWidgetManager, widgetId);
+              }
+              return ids;
        }
 
        private void operate(Intent intent)

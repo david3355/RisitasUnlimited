@@ -25,12 +25,7 @@ public class MainSettingsActivity extends AppCompatActivity implements View.OnCl
 
        void updateAllWidgets()
        {
-              AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
-              int[] ids = appWidgetManager.getAppWidgetIds(new ComponentName(getApplication(), RisitasLaughWidget.class));
-              for (int widgetId : ids)
-              {
-                     RisitasLaughWidget.updateAppWidget(this, appWidgetManager, widgetId);
-              }
+              int[] ids = PlayerService.updateAllWidgets(this);
               Toast.makeText(this, String.format("All %s widgets were updated", ids.length), Toast.LENGTH_SHORT).show();
        }
 
