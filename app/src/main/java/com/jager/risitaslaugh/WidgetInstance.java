@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.widget.RemoteViews;
+import android.widget.Toast;
 
 import java.util.Random;
 
@@ -67,7 +68,7 @@ public class WidgetInstance implements MediaPlayer.OnCompletionListener
        {
               playing = false;
               updateWidget(intent, R.drawable.risitas_serious);
-              player.release();
+              if (player != null) player.release();
               player = null;
               mediaStoppedHandler.mediaStopped(widgetID);
        }
@@ -87,9 +88,12 @@ public class WidgetInstance implements MediaPlayer.OnCompletionListener
        {
               updateWidget(intent, R.drawable.risitas_laugh);
               int soundID = getRandomSoundID();
-              player = player.create(context, soundID);
+//              Toast.makeText(context, String.format("Running threads before create: %s", Thread.activeCount()), Toast.LENGTH_SHORT).show();
+              player = MediaPlayer.create(context, soundID);
+//              Toast.makeText(context, String.format("Running threads after create: %s", Thread.activeCount()), Toast.LENGTH_SHORT).show();
               player.setOnCompletionListener(this);
               player.start();
+              Toast.makeText(context, String.format("Running threads after start and 1000: %s", Thread.activeCount()), Toast.LENGTH_SHORT).show();
               playing = true;
        }
 
@@ -107,5 +111,15 @@ public class WidgetInstance implements MediaPlayer.OnCompletionListener
               return (player!= null && player.isPlaying());
        }
 
-
+       @Override
+       public boolean equals(Object obj)
+       {
+              if (obj == null) return false;
+              if (obj instanceof  WidgetInstance)
+              {
+                     WidgetInstance wi = (WidgetInstance) obj;
+                     return wi.widgetID == this.widgetID;
+              }
+              return false;
+       }
 }

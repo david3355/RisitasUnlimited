@@ -18,8 +18,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class PlayerService extends Service implements MediaStoppedHandler
 {
@@ -31,8 +29,6 @@ public class PlayerService extends Service implements MediaStoppedHandler
        private final static String CHANNEL_ID = "risitas_notifications";
        private static List<WidgetInstance> widgetInstances = new ArrayList<>();
 
-       private Timer timer;
-
        private BroadcastReceiver screenOffReceiver = new BroadcastReceiver()
        {
               @Override
@@ -43,7 +39,6 @@ public class PlayerService extends Service implements MediaStoppedHandler
               }
        };
 
-
        public static final String START_PLAYER = "startplayer";
 
        @Override
@@ -51,19 +46,19 @@ public class PlayerService extends Service implements MediaStoppedHandler
        {
               registerScreenOffReceiver();
               operate(intent);
-              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-              {
-                     timer = new Timer("foregrounder") ;
-                     TimerTask task = new TimerTask()
-                     {
-                            @Override
-                            public void run()
-                            {
-                                   startForeground(NOTIFICATION_ID, buildNotification());
-                            }
-                     };
-                     timer.schedule(task, 4500);
-              }
+//              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O || true)
+//              {
+//                     timer = new Timer("foregrounder") ;
+//                     TimerTask task = new TimerTask()
+//                     {
+//                            @Override
+//                            public void run()
+//                            {
+//                                   startForeground(NOTIFICATION_ID, buildNotification());
+//                            }
+//                     };
+//                     timer.schedule(task, 4500);
+//              }
               return super.onStartCommand(intent, flags, startId);
        }
 
@@ -176,19 +171,34 @@ public class PlayerService extends Service implements MediaStoppedHandler
        public void onDestroy()
        {
               Toast.makeText(this, "DESTROY", Toast.LENGTH_SHORT).show();
-              if (timer !=null) timer.cancel();
+              try{
               unregisterReceiver(screenOffReceiver);
+              } catch (Exception e)
+              {
+                     Toast.makeText(this, "error while unregistering receiver: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+              }
               super.onDestroy();
        }
 
        @Override
        public void mediaStopped(int widgetID)
        {
-              Toast.makeText(this, "mediaStopped begins", Toast.LENGTH_SHORT).show();
+              Toast.makeText(this, String.format("mediaStopped begins, running threads: %s", Thread.activeCount()), Toast.LENGTH_SHORT).show();
               if (!isPlaying())
               {
                      Toast.makeText(this, "mediaStopped: stopping service", Toast.LENGTH_SHORT).show();
-                     stopSelf();
+                     try
+                     {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                            {
+                                   stopForeground(true);
+                            }
+
+                            stopSelf();
+                     } catch (Exception e)
+                     {
+                            Toast.makeText(this, "error while stopping svc: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                     }
               }
        }
 }
