@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -143,14 +142,14 @@ public class PlayerService extends Service implements MediaStoppedHandler
 
        private static void removeWidgetInstanceByID(int widgetID)
        {
-              Iterator<WidgetInstance> iter = widgetInstances.iterator();
-              while (iter.hasNext())
+              Iterator<WidgetInstance> iterator = widgetInstances.iterator();
+              while (iterator.hasNext())
               {
-                     WidgetInstance next = iter.next();
+                     WidgetInstance next = iterator.next();
                      if (next.getWidgetID() == widgetID)
                      {
                             if (next.isPlaying()) next.stopMedia();
-                            iter.remove();
+                            iterator.remove();
                      }
               }
        }
@@ -170,35 +169,21 @@ public class PlayerService extends Service implements MediaStoppedHandler
        @Override
        public void onDestroy()
        {
-              Toast.makeText(this, "DESTROY", Toast.LENGTH_SHORT).show();
-              try{
               unregisterReceiver(screenOffReceiver);
-              } catch (Exception e)
-              {
-                     Toast.makeText(this, "error while unregistering receiver: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-              }
               super.onDestroy();
        }
 
        @Override
        public void mediaStopped(int widgetID)
        {
-              Toast.makeText(this, String.format("mediaStopped begins, running threads: %s", Thread.activeCount()), Toast.LENGTH_SHORT).show();
               if (!isPlaying())
               {
-                     Toast.makeText(this, "mediaStopped: stopping service", Toast.LENGTH_SHORT).show();
-                     try
-                     {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                            {
-                                   stopForeground(true);
-                            }
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+//                            {
+//                                   stopForeground(true);
+//                            }
 
-                            stopSelf();
-                     } catch (Exception e)
-                     {
-                            Toast.makeText(this, "error while stopping svc: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                     }
+                     stopSelf();
               }
        }
 }

@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -29,6 +30,7 @@ public class RisitasLaughWidgetConfigureActivity extends Activity implements Com
        int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
        CheckBox checkAllLaughs;
        LinearLayout panelLaughs;
+       Button addButton;
        private MediaPlayer player;
 
        View.OnClickListener mOnClickListener = new View.OnClickListener()
@@ -109,6 +111,7 @@ public class RisitasLaughWidgetConfigureActivity extends Activity implements Com
               checkAllLaughs = findViewById(R.id.check_all_laughs);
               checkAllLaughs.setOnCheckedChangeListener(this);
               panelLaughs = findViewById(R.id.panel_laughs);
+              addButton = findViewById(R.id.add_button);
 
               // Find the widget id from the intent.
               Intent intent = getIntent();
@@ -176,6 +179,15 @@ public class RisitasLaughWidgetConfigureActivity extends Activity implements Com
               prefs.apply();
        }
 
+       boolean isAtLeastOneChecked()
+       {
+              for (int i = 0; i < panelLaughs.getChildCount(); i++)
+              {
+                     CheckBox checkBox = (CheckBox) panelLaughs.getChildAt(i);
+                     if (checkBox.isChecked()) return true;
+              }
+              return false;
+       }
 
        @Override
        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
@@ -209,6 +221,8 @@ public class RisitasLaughWidgetConfigureActivity extends Activity implements Com
                             playExampleLaugh(soundId);
                      }
               }
+              if(isAtLeastOneChecked()) addButton.setEnabled(true);
+              else addButton.setEnabled(false);
        }
 }
 

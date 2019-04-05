@@ -5,7 +5,6 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 import android.widget.Toast;
@@ -41,12 +40,12 @@ public class RisitasLaughWidget extends AppWidgetProvider
               try
               {
                      PendingIntent pendingIntent;
-                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                     {
-                            //Toast.makeText(context, "create pendingintent with req code: " + requestcode, Toast.LENGTH_SHORT).show();
-                            pendingIntent = PendingIntent.getForegroundService(context, requestcode, svc, 0);
-                            //Toast.makeText(context, "pendingintent created with req code: " + requestcode, Toast.LENGTH_SHORT).show();
-                     } else
+//                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+//                     {
+//                            //Toast.makeText(context, "create pendingintent with req code: " + requestcode, Toast.LENGTH_SHORT).show();
+//                            pendingIntent = PendingIntent.getForegroundService(context, requestcode, svc, 0);
+//                            //Toast.makeText(context, "pendingintent created with req code: " + requestcode, Toast.LENGTH_SHORT).show();
+//                     } else
                             pendingIntent = PendingIntent.getService(context, requestcode, svc, 0);
 
                      views.setOnClickPendingIntent(R.id.risitas_img, pendingIntent);

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import java.util.Random;
 
@@ -88,12 +87,9 @@ public class WidgetInstance implements MediaPlayer.OnCompletionListener
        {
               updateWidget(intent, R.drawable.risitas_laugh);
               int soundID = getRandomSoundID();
-//              Toast.makeText(context, String.format("Running threads before create: %s", Thread.activeCount()), Toast.LENGTH_SHORT).show();
               player = MediaPlayer.create(context, soundID);
-//              Toast.makeText(context, String.format("Running threads after create: %s", Thread.activeCount()), Toast.LENGTH_SHORT).show();
               player.setOnCompletionListener(this);
               player.start();
-              Toast.makeText(context, String.format("Running threads after start and 1000: %s", Thread.activeCount()), Toast.LENGTH_SHORT).show();
               playing = true;
        }
 
