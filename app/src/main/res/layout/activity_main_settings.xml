@@ -41,13 +41,16 @@
         android:layout_gravity="center_horizontal"
         />
 
-    <!--<com.google.android.gms.ads.AdView-->
-        <!--android:id="@+id/adView_main_menu"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginTop="20dp"-->
-
-        <!--/>-->
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adview_main_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/test_ad_id"
+        />
 
 
     <!--<android.appwidget.AppWidgetHostView-->

@@ -6,10 +6,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 public class MainSettingsActivity extends AppCompatActivity implements View.OnClickListener
 {
-
        Button btnUpdateWidgets;
+       private AdView mainAdView;
 
        @Override
        protected void onCreate(Bundle savedInstanceState)
@@ -17,7 +21,12 @@ public class MainSettingsActivity extends AppCompatActivity implements View.OnCl
               super.onCreate(savedInstanceState);
               setContentView(R.layout.activity_main_settings);
 
-//              MobileAds.initialize(this, "ca-app-pub-4652918824295004~7938116189");
+              String appId = getResources().getString(R.string.admob_app_id);
+              MobileAds.initialize(this, appId);
+              mainAdView = findViewById(R.id.adview_main_menu);
+              AdRequest adRequest = new AdRequest.Builder().build();
+              mainAdView.loadAd(adRequest);
+
 
               btnUpdateWidgets = findViewById(R.id.btn_update_widgets);
               btnUpdateWidgets.setOnClickListener(this);
