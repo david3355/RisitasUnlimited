@@ -1,7 +1,5 @@
 package com.jager.risitaslaugh;
 
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -18,6 +16,8 @@ public class MainSettingsActivity extends AppCompatActivity implements View.OnCl
        {
               super.onCreate(savedInstanceState);
               setContentView(R.layout.activity_main_settings);
+
+//              MobileAds.initialize(this, "ca-app-pub-4652918824295004~7938116189");
 
               btnUpdateWidgets = findViewById(R.id.btn_update_widgets);
               btnUpdateWidgets.setOnClickListener(this);

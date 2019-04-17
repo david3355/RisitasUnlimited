@@ -41,6 +41,15 @@
         android:layout_gravity="center_horizontal"
         />
 
+    <!--<com.google.android.gms.ads.AdView-->
+        <!--android:id="@+id/adView_main_menu"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="20dp"-->
+
+        <!--/>-->
+
+
     <!--<android.appwidget.AppWidgetHostView-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="300dp"-->

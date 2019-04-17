@@ -4,9 +4,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/risitas_icon"
+        android:icon="@drawable/risitas_icon_round"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/risitas_icon"
+        android:roundIcon="@drawable/risitas_icon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainSettingsActivity">
@@ -15,6 +15,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+
+            <meta-data
+                android:name="com.google.android.gms.ads.APPLICATION_ID"
+                android:value="ca-app-pub-4652918824295004~7938116189"/>
         </activity>
 
         <receiver android:name=".RisitasLaughWidget">
