@@ -14,6 +14,10 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -108,6 +112,13 @@ public class RisitasLaughWidgetConfigureActivity extends Activity implements Com
               setResult(RESULT_CANCELED);
 
               setContentView(R.layout.risitas_laugh_widget_configure);
+
+              String appId = getResources().getString(R.string.admob_app_id);
+              MobileAds.initialize(this, appId);
+              AdView mainAdView = findViewById(R.id.adview_widget_config);
+              AdRequest adRequest = new AdRequest.Builder().build();
+              mainAdView.loadAd(adRequest);
+
               checkAllLaughs = findViewById(R.id.check_all_laughs);
               checkAllLaughs.setOnCheckedChangeListener(this);
               panelLaughs = findViewById(R.id.panel_laughs);
@@ -137,7 +148,7 @@ public class RisitasLaughWidgetConfigureActivity extends Activity implements Com
                              LayoutParams.MATCH_PARENT,
                              LayoutParams.WRAP_CONTENT
                      );
-                     params.setMargins(3, 5, 3, 10);
+                     params.setMargins(3, 5, 3, 5);
                      laughCheckbox.setLayoutParams(params);
                      laughCheckbox.setText(String.format("Laugh %s", i+1));
                      int id = CHECKBOX_BASE_ID + i;

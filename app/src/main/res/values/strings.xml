@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Risitas Unlimited</string>
     <string name="configure">Select laughs for this widget</string>
-    <string name="config_info">Selected items will be played at random</string>
+    <string name="config_info">Selected laughs will be played randomly</string>
     <string name="add_widget">Add widget</string>
     <string name="test_ad_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="mainmenu_ad_id">ca-app-pub-4652918824295004/6880309093</string>

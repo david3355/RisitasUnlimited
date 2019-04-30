@@ -13,7 +13,6 @@ import com.google.android.gms.ads.MobileAds;
 public class MainSettingsActivity extends AppCompatActivity implements View.OnClickListener
 {
        Button btnUpdateWidgets;
-       private AdView mainAdView;
 
        @Override
        protected void onCreate(Bundle savedInstanceState)
@@ -23,7 +22,7 @@ public class MainSettingsActivity extends AppCompatActivity implements View.OnCl
 
               String appId = getResources().getString(R.string.admob_app_id);
               MobileAds.initialize(this, appId);
-              mainAdView = findViewById(R.id.adview_main_menu);
+              AdView mainAdView = findViewById(R.id.adview_main_menu);
               AdRequest adRequest = new AdRequest.Builder().build();
               mainAdView.loadAd(adRequest);
 
