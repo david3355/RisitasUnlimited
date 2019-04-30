@@ -4,6 +4,8 @@
     <string name="config_info">Selected laughs will be played randomly</string>
     <string name="add_widget">Add widget</string>
     <string name="test_ad_id">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="mainmenu_ad_id">ca-app-pub-4652918824295004/6880309093</string>
     <string name="admob_app_id">ca-app-pub-4652918824295004~7938116189</string>
+
+    <string name="mainmenu_ad_id">ca-app-pub-4652918824295004/6880309093</string>
+    <string name="widgetconfig_ad_id">ca-app-pub-4652918824295004/7171829427</string>
 </resources>

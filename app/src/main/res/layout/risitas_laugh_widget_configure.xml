@@ -69,7 +69,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             ads:adSize="BANNER"
-            ads:adUnitId="@string/test_ad_id"
+            ads:adUnitId="@string/widgetconfig_ad_id"
             />
 
     </LinearLayout>

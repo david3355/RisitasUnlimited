@@ -55,7 +55,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
         ads:adSize="BANNER"
-        ads:adUnitId="@string/test_ad_id"
+        ads:adUnitId="@string/mainmenu_ad_id"
         />
 
 
