@@ -36,7 +36,6 @@ public class PlayerService extends Service implements MediaStoppedHandler
               {
                      stopAllMedia();
                      stopSelf();
-                     updateAllWidgets(PlayerService.this);
               }
        };
 
