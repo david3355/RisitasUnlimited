@@ -5,7 +5,9 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -21,11 +23,13 @@ public class RisitasLaughWidget extends AppWidgetProvider
 
        static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId)
        {
+              Log.i(RisitasLaughWidget.class.getName(), String.format("Widget %s is being updated", appWidgetId));
               Set<String> chosenIndexes = RisitasLaughWidgetConfigureActivity.loadChosenIndexPrefs(context, appWidgetId);
               if (chosenIndexes == null) return;
 
               String[] indexArray = {};
-              if (chosenIndexes != null) indexArray = chosenIndexes.toArray(new String[0]);
+              indexArray = chosenIndexes.toArray(new String[0]);
+
               // Construct the RemoteViews object
               RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.risitas_laugh_widget);
 
@@ -40,20 +44,18 @@ public class RisitasLaughWidget extends AppWidgetProvider
               try
               {
                      PendingIntent pendingIntent;
-//                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-//                     {
-//                            //Toast.makeText(context, "create pendingintent with req code: " + requestcode, Toast.LENGTH_SHORT).show();
-//                            pendingIntent = PendingIntent.getForegroundService(context, requestcode, svc, 0);
-//                            //Toast.makeText(context, "pendingintent created with req code: " + requestcode, Toast.LENGTH_SHORT).show();
-//                     } else
-                            pendingIntent = PendingIntent.getService(context, requestcode, svc, 0);
+                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                     {
+                            Log.i(PlayerService.class.getName(), "Create foreground service pending intent");
+                            pendingIntent = PendingIntent.getForegroundService(context, requestcode, svc, 0);
+                     } else pendingIntent = PendingIntent.getService(context, requestcode, svc, 0);
 
                      views.setOnClickPendingIntent(R.id.risitas_img, pendingIntent);
-
 
                      // Instruct the widget manager to update the widget
 
                      appWidgetManager.updateAppWidget(appWidgetId, views);
+                     Log.i(RisitasLaughWidget.class.getName(), String.format("Widget %s is updated", appWidgetId));
               } catch (Exception e)
               {
                      Toast.makeText(context, "Failed to update widget: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -63,6 +65,7 @@ public class RisitasLaughWidget extends AppWidgetProvider
        @Override
        public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds)
        {
+              Log.d(RisitasLaughWidget.class.getName(), String.format("Updating all %s widgets", appWidgetIds.length));
               // There may be multiple widgets active, so update all of them
               for (int appWidgetId : appWidgetIds)
               {
@@ -73,6 +76,7 @@ public class RisitasLaughWidget extends AppWidgetProvider
        @Override
        public void onDeleted(Context context, int[] appWidgetIds)
        {
+              Log.d(RisitasLaughWidget.class.getName(), String.format("Deleting %s widgets", appWidgetIds.length));
               super.onDeleted(context, appWidgetIds);
               PlayerService.deleteUnusedWidgetInstances(appWidgetIds);
 

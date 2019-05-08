@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -97,8 +98,9 @@ public class RisitasLaughWidgetConfigureActivity extends Activity implements Com
 
        private void playExampleLaugh(int soundID)
        {
+              Log.d(RisitasLaughWidgetConfigureActivity.class.getName(), String.format("Playing example laugh sound %s", soundID));
               stopMediaPlayer();
-              player = player.create(this, soundID);
+              player = MediaPlayer.create(this, soundID);
               player.start();
        }
 
@@ -168,6 +170,7 @@ public class RisitasLaughWidgetConfigureActivity extends Activity implements Com
        // Write the prefix to the SharedPreferences object for this widget
        static void saveSelectedIndexPrefs(Context context, int appWidgetId, List<String> ids)
        {
+              Log.d(RisitasLaughWidgetConfigureActivity.class.getName(), String.format("Saving preferences for widget: %s", appWidgetId));
               SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
               Set<String> idSet= new HashSet<>(ids);
               prefs.putStringSet(PREF_PREFIX_KEY + appWidgetId, idSet);
@@ -179,12 +182,12 @@ public class RisitasLaughWidgetConfigureActivity extends Activity implements Com
        static Set<String> loadChosenIndexPrefs(Context context, int appWidgetId)
        {
               SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-              Set<String> chosenIndexes = prefs.getStringSet(PREF_PREFIX_KEY + appWidgetId, null);
-              return chosenIndexes;
+              return prefs.getStringSet(PREF_PREFIX_KEY + appWidgetId, null);
        }
 
        static void deleteChosenIndexPrefs(Context context, int appWidgetId)
        {
+              Log.d(RisitasLaughWidgetConfigureActivity.class.getName(), String.format("Removing preferences for widget: %s", appWidgetId));
               SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
               prefs.remove(PREF_PREFIX_KEY + appWidgetId);
               prefs.apply();

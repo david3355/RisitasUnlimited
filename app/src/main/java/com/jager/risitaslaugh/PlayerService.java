@@ -10,10 +10,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -34,31 +36,32 @@ public class PlayerService extends Service implements MediaStoppedHandler
               @Override
               public void onReceive(Context context, Intent intent)
               {
+                     Log.i(PlayerService.class.getName(), "Phone screen is switched off");
                      stopAllMedia();
-                     stopSelf();
+                     shutdownService();
               }
        };
 
        public static final String START_PLAYER = "startplayer";
 
        @Override
-       public int onStartCommand(Intent intent, int flags, int startId)
+       public void onCreate()
        {
               registerScreenOffReceiver();
+              super.onCreate();
+       }
+
+       @Override
+       public int onStartCommand(Intent intent, int flags, int startId)
+       {
+              Log.i(PlayerService.class.getName(), "PlayerService is started");
+              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+              {
+                     Log.d(PlayerService.class.getName(), "Starting foreground");
+                     startForeground(NOTIFICATION_ID, buildNotification());
+              }
               operate(intent);
-//              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O || true)
-//              {
-//                     timer = new Timer("foregrounder") ;
-//                     TimerTask task = new TimerTask()
-//                     {
-//                            @Override
-//                            public void run()
-//                            {
-//                                   startForeground(NOTIFICATION_ID, buildNotification());
-//                            }
-//                     };
-//                     timer.schedule(task, 4500);
-//              }
+              Log.d(PlayerService.class.getName(), "Operation finished in PlayerService");
               return super.onStartCommand(intent, flags, startId);
        }
 
@@ -70,8 +73,8 @@ public class PlayerService extends Service implements MediaStoppedHandler
 
               NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(this.getApplicationContext(), CHANNEL_ID);
               notifBuilder.setContentTitle("Risitas is laughing")
-//                      .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.id.risitas_img))
-//                      .setSmallIcon(R.id.risitas_img)
+                      .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.drawable.risitas_draw_icon))
+                      .setSmallIcon(R.drawable.risitas_draw_icon)
                       .setStyle(new NotificationCompat.BigTextStyle());
 
               if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
@@ -109,6 +112,7 @@ public class PlayerService extends Service implements MediaStoppedHandler
               WidgetInstance widget = getWidgetByID(widgetId);
               if (widget == null)
               {
+                     Log.d(PlayerService.class.getName(), String.format("New widget instance is created: %s", widgetId));
                      widget = new WidgetInstance(widgetId, getApplicationContext(), intent, this, laughIds);
                      widgetInstances.add(widget);
               }
@@ -129,13 +133,14 @@ public class PlayerService extends Service implements MediaStoppedHandler
 
        private void stopAllMedia()
        {
+              Log.i(PlayerService.class.getName(), "Stopping all playing widget");
               for (WidgetInstance winstance : widgetInstances)
               {
                      if (winstance.isPlaying()) winstance.stopMedia();
               }
        }
 
-       private boolean isPlaying()
+       private boolean isAnyWidgetPlaying()
        {
               for (WidgetInstance winstance : widgetInstances)
               {
@@ -154,14 +159,15 @@ public class PlayerService extends Service implements MediaStoppedHandler
 
        private static void removeWidgetInstanceByID(int widgetID)
        {
-              Iterator<WidgetInstance> iterator = widgetInstances.iterator();
-              while (iterator.hasNext())
+              Log.d(PlayerService.class.getName(), String.format("Removing widget: %s", widgetID));
+              Iterator<WidgetInstance> widget_iterator = widgetInstances.iterator();
+              while (widget_iterator.hasNext())
               {
-                     WidgetInstance next = iterator.next();
+                     WidgetInstance next = widget_iterator.next();
                      if (next.getWidgetID() == widgetID)
                      {
                             if (next.isPlaying()) next.stopMedia();
-                            iterator.remove();
+                            widget_iterator.remove();
                      }
               }
        }
@@ -170,6 +176,7 @@ public class PlayerService extends Service implements MediaStoppedHandler
        {
               IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
               registerReceiver(screenOffReceiver, filter);
+              Log.i(PlayerService.class.getName(), "Screen off receiver is registered");
        }
 
        @Override
@@ -185,17 +192,27 @@ public class PlayerService extends Service implements MediaStoppedHandler
               super.onDestroy();
        }
 
+       private void shutdownService()
+       {
+              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+              {
+                     Log.d(PlayerService.class.getName(), "Stopping foreground");
+                     stopForeground(true);
+              }
+              // stopService makes sure that service is stopped at any circumstances.
+              this.stopService(new Intent(this, PlayerService.class));
+              Log.i(PlayerService.class.getName(), "PlayerService stopped");
+              // stopSelf() ensures that the service is not stopped until started intents have been processed
+       }
+
        @Override
        public void mediaStopped(int widgetID)
        {
-              if (!isPlaying())
+              Log.d(PlayerService.class.getName(), String.format("Widget %s is stopped playing", widgetID));
+              if (!isAnyWidgetPlaying())
               {
-//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-//                            {
-//                                   stopForeground(true);
-//                            }
-
-                     stopSelf();
+                     Log.d(PlayerService.class.getName(), String.format("Stopping PlayerService (last widget: %s)", widgetID));
+                     shutdownService();
               }
        }
 }

@@ -4,6 +4,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.util.Log;
 import android.widget.RemoteViews;
 
 import java.util.Random;
@@ -26,7 +27,6 @@ public class WidgetInstance implements MediaPlayer.OnCompletionListener
        private Context context;
        private MediaPlayer player;
        private int widgetID;
-       private boolean playing;
        private static Random rnd = new Random();
        private MediaStoppedHandler mediaStoppedHandler;
 
@@ -57,6 +57,7 @@ public class WidgetInstance implements MediaPlayer.OnCompletionListener
        private void updateWidget(Intent intent, int imageID)
        {
               int widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0);
+              Log.d(WidgetInstance.class.getName(), String.format("Widget instance is being updated: %s", widgetId));
               AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
               RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.risitas_laugh_widget);
               remoteViews.setImageViewResource(R.id.risitas_img, imageID);
@@ -65,9 +66,13 @@ public class WidgetInstance implements MediaPlayer.OnCompletionListener
 
        private void mediaStopped()
        {
-              playing = false;
+              Log.d(WidgetInstance.class.getName(), String.format("Playing stopped for widget: %s", widgetID));
               updateWidget(intent, R.drawable.risitas_serious);
-              if (player != null) player.release();
+              if (player != null)
+              {
+                     player.reset();
+                     player.release();
+              }
               player = null;
               mediaStoppedHandler.mediaStopped(widgetID);
        }
@@ -89,8 +94,8 @@ public class WidgetInstance implements MediaPlayer.OnCompletionListener
               int soundID = getRandomSoundID();
               player = MediaPlayer.create(context, soundID);
               player.setOnCompletionListener(this);
+              Log.d(WidgetInstance.class.getName(), String.format("Widget %s starts playing sound: %s", widgetID, soundID));
               player.start();
-              playing = true;
        }
 
        public void stopMedia()
